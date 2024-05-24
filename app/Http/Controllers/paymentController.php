@@ -15,13 +15,14 @@ class paymentController extends Controller
             $stripe = new \Stripe\StripeClient([
                 'api_key' => env('STRIPE_SECRET')
             ]);
-            $stripe->paymentIntents->create([
+            $intent = $stripe->paymentIntents->create([
                 'amount' => intval($request->get('amount')) * 100,
                 'currency' => $request->input('currency'),
                 'automatic_payment_methods' => ['enabled' => true],
             ]);
             return response()->json([
-                'message' => 'Payment successful!!!',
+                'message' => 'Ok!',
+                'client_secret' => $intent->client_secret
             ], 200);
         } catch (Exception $e) {
             return response()->json([
