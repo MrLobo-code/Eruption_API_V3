@@ -22,7 +22,7 @@ class token extends JWT
             'iat' => time(),
             'exp' => time() + (24 * 60 * 60),
             'credentials' => [
-                'employee_name' => $userName,
+                'username' => $userName,
             ]
         ];
 

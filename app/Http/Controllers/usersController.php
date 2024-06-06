@@ -62,7 +62,7 @@ class usersController extends Controller
             $token = Token::generate($credentials['username'], $credentials['password']);
             return response()->json([
                 'token' => $token,
-                // 'username' => $credentials["username"],
+                'username' => $credentials["username"],
                 'message' => 'Bienvenid@ ' . $credentials["username"] . "!!!"
 
             ], 201);
