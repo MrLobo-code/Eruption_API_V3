@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Models\admin_user;
 use App\Utils\Token;
+use Illuminate\Support\Facades\Hash;
 
 class usersController extends Controller
 {
@@ -23,7 +24,8 @@ class usersController extends Controller
             $new_admin_user->username = $credentials["username"];
             $new_admin_user->email = $credentials["email"];
             // $new_admin_user->user_password  = hash('sha512', $credentials["password"]);
-            $new_admin_user->user_password  = $credentials["password"];
+            $new_admin_user->user_password  = hash::make($credentials["password"]);
+            // $new_admin_user->user_password  = $credentials["password"];
 
             $new_admin_user->save();
 
@@ -49,14 +51,22 @@ class usersController extends Controller
             // $userExist = admin_user::select('admin_users.username', 'admin_users.user_password', 'admin_users.email')
             $userExist = admin_user::select('admin_users.username', 'admin_users.user_password')
                 ->where('username', $credentials['username'])
-                ->where('user_password', $credentials['password'])
-                // ->where('email', $credentials['email'])
+                // ->where('user_password', $credentials['password'])
                 ->first();
 
             if (!$userExist) {
                 return response()->json([
-                    'message' => 'Invalid username or password'
+                    // 'message' => 'Invalid username or password'
+                    'message' => 'Invalid username'
                 ], 401); // Unauthorized status code 
+            }
+
+
+            if (!Hash::check($credentials['password'], $userExist->user_password)) {
+                return response()->json(
+                    ['message' => 'Invalid password'], // Mensaje más claro
+                    401
+                );
             }
 
             $token = Token::generate($credentials['username'], $credentials['password']);
@@ -68,7 +78,7 @@ class usersController extends Controller
             ], 201);
         } catch (Exception $e) {
             return response()->json(
-                $e,
+                ['message' => $e->getMessage()],
                 500
             );
         }

@@ -32,7 +32,6 @@ class paymentController extends Controller
     }
     public function test1(Request $request)
     {
-
         $amount = $request->amount;
         $currency = $request->currency;
 
