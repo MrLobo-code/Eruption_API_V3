@@ -7,6 +7,8 @@ use Exception;
 use App\Models\admin_user;
 use App\Utils\Token;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class usersController extends Controller
 {
@@ -39,6 +41,21 @@ class usersController extends Controller
             );
         }
     }
+
+    public function newUserCart($username)
+    {
+        $tablename = $username . '_cart';
+        Schema::create($tablename, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('product_name');
+            $table->string('price');
+            // $table->id();
+            // $table->string('name');
+            // $table->string('email');
+            // $table->timestamps();
+        });
+    }
+
     public function userAuth(Request $request)
     {
         try {
