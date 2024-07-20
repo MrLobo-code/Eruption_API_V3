@@ -5,13 +5,86 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Exception;
 use App\Models\admin_user;
+use App\Models\productCart;
 use App\Utils\Token;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class usersController extends Controller
 {
+
+    public function cartProductCounter(Request $request)
+    {
+        try {
+            $credentials = $request->validate([
+                'username' => 'required',
+            ]);
+            // $wordlist = DB::table($credentials["username"])->where('id', '<=', $correctedComparisons)
+            $wordlist = DB::table($credentials["username"] . '_cart')->select()->get();
+            $wordCount = $wordlist->count();
+
+            return response()->json([
+                // 'message' => $wordCount
+                $wordCount
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Error al consultar items del carrito de compra',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function addToCart(Request $request)
+    {
+        try {
+            $credentials = $request->validate([
+                'username' => 'required',
+                'ProductName' => 'required',
+                'productDescription' => 'required',
+                'Price' => 'required',
+                // 'imgPath' => 'required'
+            ]);
+
+            DB::table($credentials["username"] . '_cart')->insert([
+                'ProductName' => $request->ProductName,
+                'productDescription' => $request->productDescription,
+                'Price' => $request->Price,
+                // 'imgPath' => $request->imgPath,
+                'imgPath' => 'Empty temporarily...',
+            ]);
+
+            return response()->json([
+                'respose' => 'Product added to the cart',
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'Error adding product to the cart: ',
+                    'message' => $e->getMessage(),
+                    500
+                ]
+            );
+        }
+    }
+
+    public function newUserCart($username)
+    {
+        $tablename = $username . '_cart';
+        Schema::create($tablename, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('ProductName');
+            $table->string('productDescription');
+            $table->decimal('Price');
+            $table->string('imgPath');
+            // $table->id();
+            // $table->string('name');
+            // $table->string('email');
+            // $table->timestamps();
+        });
+    }
+
     public function createUser(Request $request)
     {
         try {
@@ -31,6 +104,8 @@ class usersController extends Controller
 
             $new_admin_user->save();
 
+            self::newUserCart($credentials["username"]);
+
             return response()->json([
                 'respose' => 'Usuario creado con éxito!'
             ], 201);
@@ -42,19 +117,7 @@ class usersController extends Controller
         }
     }
 
-    public function newUserCart($username)
-    {
-        $tablename = $username . '_cart';
-        Schema::create($tablename, function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('product_name');
-            $table->string('price');
-            // $table->id();
-            // $table->string('name');
-            // $table->string('email');
-            // $table->timestamps();
-        });
-    }
+
 
     public function userAuth(Request $request)
     {

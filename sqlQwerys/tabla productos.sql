@@ -1,10 +1,11 @@
 use eruption
 
+select * from Oscar_cart
 select * from admin_users
-
+select * from someoneelse_cart
 Select * from Products
 
-drop table Products
+drop table admin_users
 
   CREATE TABLE Products (
     id INT PRIMARY KEY IDENTITY(1,1),
@@ -45,7 +46,7 @@ IsActive
 ) 
 values(
 'RG405V',
-'Consola de videojuegos portátil, pantalla táctil IPS de 4 pulgadas, Android 12, T618, batería de 5500 mAh, 5G, Wi-Fi, Bluetooth, disipación automática de calor, 128 GB, 3154 juegos, RG405V, gris',
+'Consola de videojuegos portÃ¡til, pantalla tÃ¡ctil IPS de 4 pulgadas, Android 12, T618, baterÃ­a de 5500 mAh, 5G, Wi-Fi, Bluetooth, disipaciÃ³n automÃ¡tica de calor, 128 GB, 3154 juegos, RG405V, gris',
 56,
 3890.97,	
 30,
@@ -60,3 +61,10 @@ NULL,
 NULL,
 null
 )
+
+CREATE TABLE admin_users
+( user_id int identity(1,1) Primary key,
+  username varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  user_password varchar(255) NOT NULL
+  );
