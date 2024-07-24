@@ -14,7 +14,39 @@ use Illuminate\Support\Facades\Schema;
 
 class usersController extends Controller
 {
+    public function deleteCartItem(Request $request)
+    {
+        try {
+            $credentials = $request->validate([
+                'id' => 'required',
+                'username' => 'required'
+            ]);
 
+            // $smartphone = DB::table($credentials["username"] . '_cart')->where('id', $credentials["username"])->delete();
+            DB::table($credentials["username"] . '_cart')->where('id', $credentials["id"])->delete();
+            return response()->json(
+                [
+                    'message' => 'Registro eliminado con éxito!!!'
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    $e->getMessage()
+                ],
+                200
+            );
+        }
+    }
+    public function getCartItems(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => 'required',
+        ]);
+        $wordlist = DB::table($credentials["username"] . '_cart')->select()->get();
+        return response()->json($wordlist, 201);
+    }
     public function cartProductCounter(Request $request)
     {
         try {

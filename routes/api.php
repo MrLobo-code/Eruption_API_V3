@@ -8,6 +8,8 @@ Route::post('/login', [App\Http\Controllers\usersController::class, 'userAuth'])
 Route::post('/signup', [App\Http\Controllers\usersController::class, 'createUser']);
 Route::post('/addToCart', [App\Http\Controllers\usersController::class, 'addToCart']);
 Route::post('/cartProductCounter', [App\Http\Controllers\usersController::class, 'cartProductCounter']);
+Route::post('/Cart', [App\Http\Controllers\usersController::class, 'getCartItems']);
+Route::post('/deleteCartItem', [App\Http\Controllers\usersController::class, 'deleteCartItem']);
 Route::get('/validateToken', App\Http\Controllers\validateTokenController::class);
 Route::get('/users', [App\Http\Controllers\usersController::class, 'getUsers']);
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'getProduct']);
