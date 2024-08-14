@@ -5,7 +5,7 @@ select * from admin_users
 select * from someoneelse_cart
 Select * from Products
 
-drop table admin_users
+drop table Products
 
   CREATE TABLE Products (
     id INT PRIMARY KEY IDENTITY(1,1),

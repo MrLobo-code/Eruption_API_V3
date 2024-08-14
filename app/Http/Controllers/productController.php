@@ -2,12 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\File;
 use App\Models\products;
 use Illuminate\Http\Request;
 use Exception;
 
-class ProductController extends Controller
+class productController extends Controller
 {
+    public function createNewProduct(Request $request)
+    {
+        try {
+            $campos = $request;
+
+            $new_product = new products;
+            $new_product->ProductName = $campos->ProductName;
+            $new_product->productDescription = $campos->productDescription;
+            $new_product->CategoryID = $campos->CategoryID;
+            $new_product->Price = $campos->Price;
+            $new_product->Stock = $campos->Stock;
+            $new_product->SKU = $campos->SKU;
+            $new_product->Brand = $campos->Brand;
+            $new_product->Product = $campos->Product;
+            $new_product->Dimensions = $campos->Dimensions;
+            $new_product->Color = $campos->Color;
+            $new_product->Size = $campos->Size;
+            $new_product->ThumbnailURL = $campos->ThumbnailURL;
+            $new_product->CreatedDate = $campos->CreatedDate;
+            $new_product->ModifiedDate = $campos->ModifiedDate;
+            $new_product->IsActive = $campos->IsActive;
+
+            $new_product->save();
+
+            return response()->json(
+                [
+                    'message' => 'Producto guardado con éxito!',
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function getProduct()
     {
         try {
@@ -20,6 +57,39 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Error, Products table is not available'
             ], 500);
+        }
+    }
+
+    public function uploadImages(Request $request)
+    {
+        try {
+            if ($request->hasFile('FileName')) {
+                $file = $request->file('FileName');
+                $productName = $request->ProductName;
+                $path = public_path('products/' . $productName);
+
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0777, true);
+                }
+
+                // Obtener el nombre original del archivo
+                $fileName = $file->getClientOriginalName();
+
+                // Mover el archivo a la carpeta correspondiente
+                $file->move($path, $fileName);
+
+                return response()->json([
+                    "message" => "Archivo guardado",
+                ]);
+            } else {
+                return response()->json([
+                    "message" => "Error al guardar!!!"
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error: ' . $e->getMessage()
+            ], 404);
         }
     }
 }

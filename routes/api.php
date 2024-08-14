@@ -10,6 +10,10 @@ Route::post('/addToCart', [App\Http\Controllers\usersController::class, 'addToCa
 Route::post('/cartProductCounter', [App\Http\Controllers\usersController::class, 'cartProductCounter']);
 Route::post('/Cart', [App\Http\Controllers\usersController::class, 'getCartItems']);
 Route::post('/deleteCartItem', [App\Http\Controllers\usersController::class, 'deleteCartItem']);
+Route::post('/createNewProduct', [App\Http\Controllers\productController::class, 'createNewProduct']);
+
+Route::post('/uploadImages', [App\Http\Controllers\productController::class, 'uploadImages']);
+
 Route::get('/validateToken', App\Http\Controllers\validateTokenController::class);
 Route::get('/users', [App\Http\Controllers\usersController::class, 'getUsers']);
-Route::get('/products', [App\Http\Controllers\ProductController::class, 'getProduct']);
+Route::get('/products', [App\Http\Controllers\productController::class, 'getProduct']);

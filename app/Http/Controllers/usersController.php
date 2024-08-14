@@ -76,15 +76,15 @@ class usersController extends Controller
                 'ProductName' => 'required',
                 'productDescription' => 'required',
                 'Price' => 'required',
-                // 'imgPath' => 'required'
+                'imgPath' => 'required'
             ]);
 
             DB::table($credentials["username"] . '_cart')->insert([
                 'ProductName' => $request->ProductName,
                 'productDescription' => $request->productDescription,
                 'Price' => $request->Price,
-                // 'imgPath' => $request->imgPath,
-                'imgPath' => 'Empty temporarily...',
+                'imgPath' => $request->imgPath,
+                // 'imgPath' => 'Empty temporarily...',
             ]);
 
             return response()->json([
@@ -148,8 +148,6 @@ class usersController extends Controller
             );
         }
     }
-
-
 
     public function userAuth(Request $request)
     {
