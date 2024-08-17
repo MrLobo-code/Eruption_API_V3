@@ -13,6 +13,7 @@ Route::post('/deleteCartItem', [App\Http\Controllers\usersController::class, 'de
 Route::post('/createNewProduct', [App\Http\Controllers\productController::class, 'createNewProduct']);
 
 Route::post('/uploadImages', [App\Http\Controllers\productController::class, 'uploadImages']);
+Route::post('/s3-url', [App\Http\Controllers\productController::class, 'uploadToBucketS3']);
 
 Route::get('/validateToken', App\Http\Controllers\validateTokenController::class);
 Route::get('/users', [App\Http\Controllers\usersController::class, 'getUsers']);
