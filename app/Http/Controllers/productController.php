@@ -7,6 +7,7 @@ use App\Models\products;
 use Illuminate\Http\Request;
 use Exception;
 use Aws\S3\S3Client;
+use Illuminate\Support\Facades\Storage;
 
 class productController extends Controller
 {
@@ -94,35 +95,51 @@ class productController extends Controller
         }
     }
 
-
-
-    //RECTIFICAR siguiente CÓDIGO
     public function uploadToBucketS3(Request $request)
     {
-        $sharedConfig = [
-            'region' => env('AWS_DEFAULT_REGION'),
-            'version' => 'latest',
-            'credentials' => [
-                'key'    => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ]
-        ];
+        try {
+            $file = $request->file('file');
+            $fileName = time() . $file->getClientOriginalName();
 
-        $s3 = new S3Client($sharedConfig);
-
-        // ... (código para generar la URL prefirmada)
-
-        $cmd = $s3->putObjectCommand([
-            'Bucket' => env('AWS_BUCKET'),
-            'Key'    => 'your-key-name.jpg', // Puedes personalizar la clave
-            'Body'   => 'Your file body', // Reemplaza con el contenido del archivo
-            'ContentType' => 'image/jpeg', // Ajusta el tipo de contenido según sea necesario
-            'ACL'    => 'public-read' // Para hacer el archivo público
-        ]);
-
-        $request = $s3->createPresignedRequest($cmd, '+1 hour');
-        $signedRequest = (string) $request->getUri();
-
-        return response()->json(['url' => $signedRequest]);
+            Storage::put(path: 'images', contents: $file, options: $fileName);
+            // return back();
+            return response()->json([
+                'message' => 'IMG successfully stored!!!'
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Error: ' . $e->getMessage()
+            ], 404);
+        }
     }
+
+    //RECTIFICAR siguiente CÓDIGO
+    // public function uploadToBucketS3(Request $request)
+    // {
+    //     $sharedConfig = [
+    //         'region' => env('AWS_DEFAULT_REGION'),
+    //         'version' => 'latest',
+    //         'credentials' => [
+    //             'key'    => env('AWS_ACCESS_KEY_ID'),
+    //             'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    //         ]
+    //     ];
+
+    //     $s3 = new S3Client($sharedConfig);
+
+    //     // ... (código para generar la URL prefirmada)
+
+    //     $cmd = $s3->putObjectCommand([
+    //         'Bucket' => env('AWS_BUCKET'),
+    //         'Key'    => 'your-key-name.jpg', // Puedes personalizar la clave
+    //         'Body'   => 'Your file body', // Reemplaza con el contenido del archivo
+    //         'ContentType' => 'image/jpeg', // Ajusta el tipo de contenido según sea necesario
+    //         'ACL'    => 'public-read' // Para hacer el archivo público
+    //     ]);
+
+    //     $request = $s3->createPresignedRequest($cmd, '+1 hour');
+    //     $signedRequest = (string) $request->getUri();
+
+    //     return response()->json(['url' => $signedRequest]);
+    // }
 }
