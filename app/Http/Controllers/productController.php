@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\File;
 use App\Models\products;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
@@ -102,7 +103,7 @@ class productController extends Controller
             if (is_null($files)) {
                 return response()->json(['message' => 'No files found'], 400);
             }
-    
+
             foreach ($files as $file) {
                 $fileName = $file->getClientOriginalName();
                 Storage::putFileAs(path: $request->path, file: $file, name: $fileName);
@@ -114,6 +115,36 @@ class productController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'No files were uploaded: ' => 'Error: ' . $e->getMessage()
+            ], 404);
+        }
+    }
+
+    // public function productExist(Request $request)
+    // {
+    //     try {
+    //         if (DB::table('Products')->where('ProductName', $request->ProductName)->exists()) {
+    //             return response(true); // If true, product exist
+    //         } else {
+    //             return response(false); // If false, product exist
+    //         }
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'Message' => 'Error: ' . $e->getMessage()
+    //         ], 404);
+    //     }
+    // }
+    public function productExist(Request $request)
+    {
+        try {
+            $exists = DB::table('Products')->where('ProductName', $request->ProductName)->exists();
+
+            return response()->json([
+                'exists' => $exists // true or false
+                // 'exists' => $request // true or false
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'Message' => 'Error: ' . $e->getMessage()
             ], 404);
         }
     }

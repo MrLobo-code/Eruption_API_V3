@@ -18,3 +18,4 @@ Route::post('/s3-url', [App\Http\Controllers\productController::class, 'uploadTo
 Route::get('/validateToken', App\Http\Controllers\validateTokenController::class);
 Route::get('/users', [App\Http\Controllers\usersController::class, 'getUsers']);
 Route::get('/products', [App\Http\Controllers\productController::class, 'getProduct']);
+Route::post('/prudct_exist', [App\Http\Controllers\productController::class, 'productExist']);

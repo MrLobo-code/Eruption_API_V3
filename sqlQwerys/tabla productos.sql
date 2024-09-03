@@ -4,6 +4,9 @@ select * from Oscar_cart
 select * from admin_users
 select * from someoneelse_cart
 Select * from Products
+Select * from users
+
+delete from Products where ProductName = 'xbox';
 
 drop table Products
 
